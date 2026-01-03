@@ -31,7 +31,7 @@ export function DashboardHeader() {
             </div>
             <div className="flex items-center gap-2 text-sm text-white/70">
               <span className="w-2 h-2 rounded-full bg-risk-low animate-pulse" />
-              <span>Last Updated: January 2025</span>
+              <span>Last Updated: January 2026</span>
             </div>
           </div>
         </div>
