@@ -1,0 +1,353 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Essential Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref} % hidelinks removes colored boxes
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs} % Professional table formatting
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage[numbers,sort&compress]{natbib} % Better citation management
+\usepackage{authblk}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{siunitx} % For SI units and number formatting
+\usepackage{fancyhdr}
+
+% --- Setup siunitx for proper unit formatting ---
+\sisetup{
+    per-mode=symbol,
+    detect-all,
+    range-phrase = --,
+    range-units = single
+}
+
+% --- Remove colors from document (best practice for academic papers) ---
+% Colors removed for professional appearance and print compatibility
+
+\onehalfspacing
+\titlespacing*{\section}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+% --- Header & Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lhead{ESG Stranded Assets Analysis (2026)}
+\rfoot{CentraleSupélec | ESSEC Business School}
+
+% --- Improved caption formatting ---
+\captionsetup{
+    font=small,
+    labelfont=bf,
+    format=plain,
+    justification=justified,
+    singlelinecheck=true
+}
+
+% --- Title & Authors ---
+\title{\textbf{Carbon Transition Risk and Stranded Assets in the Global Copper Mining Industry: A Multidimensional Quantitative Framework Using Satellite-Derived Emissions Data and Machine Learning Trajectories}}
+
+\author[1]{Alexis Vannson}
+\author[1]{Kerrian Le Bars}
+\author[1]{Othmane Menkor}
+
+\affil[1]{CentraleSupélec, Université Paris-Saclay \& ESSEC Business School}
+
+\date{January 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent This research presents an integrated financial and environmental assessment of transition risk within the global copper extraction sector. Utilizing the Climate TRACE v5.2.0 database, we analyze \num{51184} monthly emission records for 914 assets across 55 jurisdictions. We develop a threefold quantitative methodology: (i) an asset-level taxonomy of carbon vulnerability, (ii) a financial sensitivity model calculating the ``stranding point'' across carbon pricing scenarios, and (iii) a forward-looking climate stress-testing framework based on Network for Greening the Financial System (NGFS) parameters and Monte Carlo simulations (\num{500} paths). Our empirical results establish that \SI{28.3}{\percent} of the global copper asset base (by count) is at high or critical risk of stranding under a \SI{100}{\$/\tonne\ce{CO2}} scenario, with total industry exposure estimated at \SI{9.52}{billion\$} annually. We find that risk is heavily concentrated, with the top \SI{10}{\percent} of mines accounting for \SI{51.6}{\percent} of emissions. Furthermore, we demonstrate that a ``disorderly'' transition increases portfolio value-at-risk (VaR) by \SI{43}{\percent} compared to an orderly baseline. The study concludes that independent, high-resolution monitoring is essential for pricing climate risk in mineral supply chains.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+The transition to a net-zero global economy is inherently material-intensive, with copper serving as a critical enabler of decarbonization. This section establishes the strategic context, defines the concept of stranded assets in mining, and outlines the research objectives that guide this analysis.
+
+\subsection{The Strategic Imperative of Copper}
+
+The transition to a net-zero global economy is fundamentally dependent on copper. Due to its superior electrical conductivity, durability, and ductility, copper forms the backbone of electrification infrastructure. Low-carbon technologies---ranging from offshore wind arrays to the intricate wiring of electric vehicle (EV) inverters---require significantly more copper than their fossil-fuel-based counterparts. A typical internal combustion engine vehicle contains approximately \SIrange{20}{25}{\kilogram} of copper, whereas a battery electric vehicle (BEV) requires \SIrange{80}{100}{\kilogram}~\citep{IEA2023}. At the grid level, solar and wind installations consume 3 to 5 times more copper per megawatt of capacity than thermal power plants~\citep{WorldBank2023}.
+
+However, this systemic reliance on copper creates a paradoxical risk. The extraction and processing of copper are energy-intensive processes that often rely on high-carbon power grids or on-site diesel generation. As global climate policies coalesce around carbon pricing and emissions tracking, the mining sector faces an existential threat: the very metal required to enable the climate transition could become a stranded asset due to its own carbon footprint.
+
+\subsection{Defining Stranded Assets in Mining}
+
+In financial literature, a stranded asset is defined as one that has suffered from premature write-downs, devaluations, or conversion to liabilities~\citep{Caldecott2016}. In the context of copper mining, stranding risk is driven by three intersecting vectors:
+\begin{enumerate}[nosep]
+    \item \textbf{Regulatory risk}: The implementation of carbon taxes or Border Carbon Adjustment Mechanisms (CBAM) that increase operating costs.
+    \item \textbf{Market risk}: Shifting consumer preferences toward ``green copper'' with lower Scope~1 and Scope~2 emission intensity.
+    \item \textbf{Operational risk}: Increasing energy costs in regions where the electricity grid remains carbon-intensive.
+\end{enumerate}
+
+Unlike fossil fuel assets, where stranding is primarily driven by demand destruction, copper mining faces stranding through cost escalation. This distinction is critical for understanding the mechanisms by which climate policy impacts mining operations.
+
+\subsection{Research Objectives}
+
+This report seeks to quantify these risks by answering four fundamental research questions:
+\begin{enumerate}[nosep]
+    \item How is carbon intensity distributed across the global copper extraction landscape?
+    \item What is the financial sensitivity of specific mining companies to carbon prices ranging from \SIrange{50}{200}{\$/\tonne\ce{CO2}}?
+    \item Which assets exhibit the highest probability of stranding (becoming loss-making) under NGFS transition scenarios?
+    \item Can we leverage machine learning and satellite data to predict future emission trajectories at the asset level?
+\end{enumerate}
+
+By addressing these questions, we aim to provide investors, policymakers, and mining companies with actionable insights for navigating the carbon transition.
+
+\section{Literature Review and Theoretical Framework}
+
+This section situates our research within the existing literature on transition risk, satellite monitoring, and asset stranding economics.
+
+\subsection{Transition Risk in Mineral Extraction}
+
+Transition risk has historically been analyzed at the national or sectoral level, with early studies focusing primarily on fossil fuel assets~\citep{Caldecott2016}. However, as the focus shifts toward the ``critical minerals'' supply chain, the definition of transition risk must expand to include the energy-intensive extraction of metals. Recent work by the International Energy Agency suggests that up to \SI{30}{\percent} of global copper production could become economically unviable if carbon prices converge globally~\citep{IEA2023}.
+
+The literature distinguishes between two types of stranding mechanisms. \textit{Demand-side stranding} occurs when assets become obsolete due to technological substitution or policy-driven demand reduction. \textit{Supply-side stranding}, which is more relevant to copper mining, occurs when rising production costs---driven by carbon pricing---erode profit margins below sustainable levels.
+
+\subsection{The Role of Satellite Monitoring}
+
+A significant barrier to accurate risk pricing has been the ``data quality gap'' in corporate reporting. Corporate sustainability reports (CSRs) often suffer from selection bias, where companies report only their most efficient assets. Climate TRACE addresses this limitation by using remote sensing to observe mining activity directly~\citep{ClimateTRACE2025}. This technological shift allows researchers to bypass corporate reporting and calculate emissions based on physical observations such as pit activity, transportation logistics, and thermal signatures of smelting operations.
+
+Satellite-derived data provides several advantages over self-reported data: it is independent, comprehensive, and temporally consistent. However, it also has limitations, including spatial resolution constraints and the inability to distinguish between different emission sources within a single facility.
+
+\subsection{Theoretical Model of Asset Stranding}
+
+We adopt a microeconomic framework for asset-level profitability. Let \( R_i \) denote the revenue of mine \( i \), \( C_i \) its operating cost, and \( E_i \) its annual emissions (in tonnes of \ce{CO2} equivalent). The introduction of a carbon price \( P_{\text{carbon}} \) alters the profit function as follows:
+\begin{equation}
+    \Pi_i = R_i - \left( C_i + E_i \cdot P_{\text{carbon}} \right).
+\end{equation}
+
+In our model, an asset is defined as ``stranded'' when \( \Pi_i \leq 0 \), or more conservatively, when the carbon cost \( E_i \cdot P_{\text{carbon}} \) exceeds the entirety of the mine's operating margin. This definition captures the point at which continued operation becomes economically unsustainable.
+
+\section{Methodology}
+
+This section details the data sources, cleaning procedures, and analytical methods employed in this study.
+
+\subsection{Data Sources and Integration}
+
+Our primary dataset is sourced from the Climate TRACE Coalition (version 5.2.0, released in 2025)~\citep{ClimateTRACE2025}. The raw dataset consists of \num{51184} monthly observations spanning the period from 2021 to 2024. We integrated this with the following supplementary datasets:
+\begin{itemize}[nosep]
+    \item \textbf{Ownership database}: A mapping of 914 \texttt{source\_id} tags to parent companies. This mapping required manual cleaning to account for joint ventures and subsidiary structures.
+    \item \textbf{Geographic metadata}: ISO 3166-1 alpha-3 country codes and headquarters locations to analyze jurisdictional risk.
+    \item \textbf{Technical metadata}: Categorization by mine type (open pit, underground, or mixed operation).
+\end{itemize}
+
+\subsection{Data Cleaning Pipeline}
+
+To ensure the robustness of the analysis, we implemented a multi-stage cleaning pipeline:
+\begin{enumerate}[nosep]
+    \item \textbf{Temporal aggregation}: Monthly records were aggregated into an annual snapshot for 2024, representing the latest complete year with stable satellite coverage.
+    \item \textbf{Status filtering}: Mines marked as ``proposed'' or ``closed'' were excluded from the primary financial impact analysis but retained for trajectory modeling.
+    \item \textbf{Intensity normalization}: We calculated carbon intensity (CI) as the ratio of emissions (in tonnes of \ce{CO2} equivalent) to production activity (in tonnes):
+    \begin{equation}
+        \text{CI} = \frac{\text{Emissions (tCO}_2\text{e)}}{\text{Production Activity (t)}}.
+    \end{equation}
+    \item \textbf{Outlier detection}: Using a \( z \)-score method, we identified intensity outliers. These outliers (e.g., El Salvador Mine) were not removed but flagged as primary ``critical risk'' candidates for further investigation.
+\end{enumerate}
+
+\subsection{Financial Parameterization}
+
+We established a baseline financial environment for the 2024--2026 period based on industry-standard assumptions:
+\begin{itemize}[nosep]
+    \item \textbf{Copper price}: \SI{9500}{\$/\tonne} (London Metal Exchange average).
+    \item \textbf{Mining margin}: \SI{30}{\percent} (industry standard for tier-1 and tier-2 operations).
+    \item \textbf{Carbon price scenarios}: Four deterministic carbon price points (\SIlist{50;100;150;200}{\$/\tonne\ce{CO2}}) aligned with NGFS pathway trajectories.
+\end{itemize}
+
+These parameters allow for sensitivity analysis across a range of plausible policy outcomes.
+
+\subsection{Machine Learning Trajectory Modeling}
+
+For forward-looking analysis, we employed a machine learning approach to model emission trajectories. Using historical emission data (2021--2024), we trained a gradient boosting model to predict future emission intensity based on:
+\begin{itemize}[nosep]
+    \item Historical emission trends.
+    \item Mine characteristics (type, ore grade, energy source).
+    \item Jurisdictional policy environment.
+\end{itemize}
+
+The model was validated using \( k \)-fold cross-validation, achieving a mean absolute percentage error of \SI{8.3}{\percent}.
+
+\section{Empirical Results: Asset-Level Analysis}
+
+This section presents the results of our asset-level carbon intensity analysis and financial sensitivity modeling.
+
+\subsection{The Global Distribution of Carbon Intensity}
+
+Our analysis reveals that carbon intensity is not uniformly distributed across the global copper mining sector. The median intensity stands at \SI{0.015}{\tonne\ce{CO2}\per\tonne} of production activity. However, the distribution exhibits a pronounced right skew, with a long tail of high-intensity emitters. The \SI{90}{th} percentile intensity is \SI{0.045}{\tonne\ce{CO2}\per\tonne}, three times the median value.
+
+This heterogeneity reflects fundamental differences in operational practices, energy sources, and ore grades. Mines operating in jurisdictions with coal-intensive electricity grids exhibit significantly higher intensities than those with access to renewable energy.
+
+\subsection{Risk Taxonomy: Tiering the 914 Assets}
+
+We developed a risk taxonomy based on two dimensions: intensity (efficiency) and absolute exposure (scale). Assets were classified into four risk tiers:
+\begin{itemize}[nosep]
+    \item \textbf{Critical risk (21 assets)}: These mines combine high intensity with massive scale. They are the most vulnerable to sudden policy shifts and account for approximately \SI{15}{\percent} of total exposure despite representing only \SI{2.3}{\percent} of the asset count.
+    \item \textbf{High risk (238 assets)}: These mines would lose more than \SI{50}{\percent} of their operating margin at a \SI{100}{\$/\tonne\ce{CO2}} carbon price.
+    \item \textbf{Moderate risk (342 assets)}: These assets face manageable but non-negligible exposure, with carbon costs representing \SIrange{20}{50}{\percent} of operating margin.
+    \item \textbf{Low risk (7 assets)}: These are the ``Paris-aligned'' assets. Many are located in jurisdictions like Chile, Norway, or parts of Australia where grid-level decarbonization is advanced.
+    \item \textbf{Already Stranded (306 assets)}: Included for completeness, representing currently closed or suspended facilities.
+\end{itemize}
+
+\subsection{Geographic Concentration of Risk}
+
+Transition risk exhibits strong geographic clustering. Mines in Iran, China, and the Democratic Republic of the Congo show higher average intensities due to:
+\begin{itemize}[nosep]
+    \item Reliance on coal-fired power for smelting and processing.
+    \item Lower ore grades requiring more energy per tonne of finished copper.
+    \item Older, less efficient mechanical fleets.
+\end{itemize}
+
+Conversely, the Chilean copper sector displays a bimodal risk distribution. Newer mines (e.g., Quebrada Blanca 2) are highly efficient, while legacy operations (e.g., El Salvador) face immediate stranding risk. Our analysis identifies the \textbf{El Salvador Mine} in Chile as a significant outlier, with a carbon intensity of \SI{0.3005}{\tonne\ce{CO2}/\tonne\ ore}---approximately \num{20} times the global median.
+
+\section{Corporate Portfolio Risk: Company-Level Analysis}
+
+Aggregating asset-level risks to the parent company level reveals significant differences in portfolio preparedness and exposure.
+
+\subsection{Carbon Exposure of Leading Mining Companies}
+
+Table~\ref{tab:company_exposure} presents the carbon exposure of the top 10 mining companies at a carbon price of \SI{100}{\$/\tonne\ce{CO2}}. Freeport-McMoRan Inc and the Government of Iran lead in absolute exposure, each facing annual costs exceeding \SI{480}{million\$} under this scenario.
+
+\begin{table}[ht]
+\centering
+\caption{Carbon exposure of top 10 mining companies at \SI{100}{\$/\tonne\ce{CO2}}.}
+\label{tab:company_exposure}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Company} & \textbf{HQ} & \textbf{Assets} & \textbf{Emissions (Mt)} & \textbf{Exposure (M\$)} \\
+\midrule
+Government of Iran & IRN & 3 & 4.84 & 484.48 \\
+Freeport-McMoRan Inc & USA & 6 & 4.38 & 438.49 \\
+Qatar Investment Authority & QAT & 5 & 2.11 & 211.21 \\
+Wanbao Mining Co & MMR & 3 & 2.08 & 208.16 \\
+SinoCongolaise des Mines SA & COD & 1 & 1.79 & 179.11 \\
+Zijin Mining Group Co Ltd & CHN & 5 & 1.43 & 143.08 \\
+Codelco Corp & CHL & 4 & 1.41 & 140.69 \\
+Southern Copper Corp & USA & 3 & 1.40 & 140.41 \\
+Eurasian Resources Group SARL & LUX & 4 & 0.66 & 66.03 \\
+Barrick Gold Corp & CAN & 2 & 0.64 & 64.04 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The Concentration of Risk}
+
+The top \SI{10}{\percent} of entities control approximately \SI{60}{\percent} of the industry's annual emissions. For investors, this implies that ``engagement'' or ``divestment'' strategies can be highly targeted. Engaging with just the top 25 companies in our dataset would address over \SI{67}{\percent} of the industry's total transition risk. This concentration offers both opportunities and challenges for climate-aligned capital allocation.
+
+\section{Forward-Looking Climate Stress Testing}
+
+This section presents the results of our forward-looking stress tests based on NGFS scenarios and Monte Carlo simulations.
+
+\subsection{NGFS Scenario Logic}
+
+We analyzed three core NGFS scenarios representing different transition pathways:
+\begin{enumerate}[nosep]
+    \item \textbf{Orderly (Net Zero 2050)}: Carbon prices start early and rise gradually, allowing for technological adaptation. Prices reach \SI{130}{\$/\tonne\ce{CO2}} by 2030 and \SI{250}{\$/\tonne\ce{CO2}} by 2050.
+    \item \textbf{Disorderly (Delayed Transition)}: Carbon prices remain low until 2030, then spike suddenly to over \SI{190}{\$/\tonne\ce{CO2}} by 2035, creating significant adjustment pressure.
+    \item \textbf{Hothouse (Current Policies)}: Carbon prices remain negligible, but physical risks (not modeled here) become the dominant factor.
+\end{enumerate}
+
+\subsection{Monte Carlo Simulation Parameters}
+
+We conducted \num{500} stochastic simulations per scenario, incorporating the following sources of uncertainty:
+\begin{itemize}[nosep]
+    \item \textbf{Copper price volatility}: Modeled using geometric Brownian motion with annual volatility \( \sigma = 0.15 \).
+    \item \textbf{Intensity reduction factor}: We applied a machine-learning-derived decay rate for each asset based on its historical performance (2021--2024).
+    \item \textbf{Policy implementation delay}: A \numrange{2}{5}~year lag in the implementation of carbon costs across different jurisdictions, reflecting regulatory heterogeneity.
+\end{itemize}
+
+\subsection{Value-at-Risk Findings}
+
+Our simulation results indicate that under the \textbf{disorderly} scenario, the aggregate value-at-risk---defined as the potential financial loss from carbon costs at the \SI{95}{th} percentile---is \num{1.4} times higher than in the orderly scenario (representing a \SI{43}{\percent} increase). This amplification occurs because the industry cannot ``build its way out'' of high-carbon electricity and diesel-heavy fleets in the short window (\numrange{2}{3}~years) provided by a policy shock. The results underscore the importance of early and predictable policy signals.
+
+\section{Strategic Choices: Divestment versus Engagement}
+
+This section examines strategic options for investors and mining companies in managing transition risk.
+
+\subsection{Identifying Divestment Candidates}
+
+We define a divestment candidate as an asset that meets three criteria:
+\begin{enumerate}[nosep]
+    \item Falls into the \textbf{critical risk} tier.
+    \item Has a \textbf{break-even carbon price} below \SI{75}{\$/\tonne\ce{CO2}}.
+    \item Shows a \textbf{deteriorating emission trend} (increasing intensity from 2021 to 2024).
+\end{enumerate}
+
+Using these criteria, we identified 20 assets globally that present an unacceptable risk-return profile for long-term climate-aligned investors. These assets are characterized by aging infrastructure, high operational carbon intensity, and limited prospects for cost-effective decarbonization.
+
+\subsection{Low-Carbon Opportunities}
+
+Conversely, the study identifies a set of ``low-risk opportunities.'' These are high-production assets (e.g., Chuquicamata in Chile) that have successfully transitioned to renewable energy contracts. These assets enjoy a competitive advantage as carbon prices rise, effectively acting as a hedge against transition risk in a diversified mining portfolio. Investors seeking exposure to copper while managing climate risk should prioritize these assets.
+
+\section{Discussion: The ``Inherited Risk'' Phenomenon}
+
+A critical insight from this research is that most mining transition risk is \textit{inherited}, not generated. A mine operating in a coal-intensive electricity grid (e.g., Inner Mongolia) faces inherently higher stranding risk than an identical mine in a renewable-intensive grid (e.g., British Columbia). This observation has profound implications for mining companies, suggesting they must become active participants in national energy policy rather than passive consumers of grid electricity.
+
+This phenomenon also highlights the importance of Scope~2 emissions---those arising from purchased electricity---in the mining sector. Unlike other industries where Scope~1 emissions dominate, copper mining's carbon footprint is heavily influenced by the emission intensity of the local electricity grid. Consequently, corporate decarbonization strategies must focus on securing access to low-carbon power, whether through power purchase agreements (PPAs), on-site renewable generation, or grid decarbonization advocacy.
+
+\section{Limitations and Future Research}
+
+While this study provides valuable insights, several limitations warrant acknowledgment. First, our financial model assumes constant copper prices and operating margins, which may not hold under dynamic market conditions. Second, the satellite-derived emission data, while comprehensive, cannot fully capture Scope~3 emissions associated with downstream processing. Third, our analysis does not account for physical climate risks (e.g., water scarcity, extreme heat) that may compound transition risks.
+
+Future research should integrate physical and transition risk assessments, incorporate dynamic pricing models, and explore the role of technological innovation (e.g., electric mining fleets, direct air capture) in mitigating stranding risk.
+
+\section{Conclusion}
+
+This research demonstrates that carbon transition risk is a material, asset-level financial factor in the global copper industry. By utilizing satellite-derived data, we have bridged the oversight gap created by traditional ESG reporting and provided a high-resolution view of emission heterogeneity across the sector.
+
+The findings are stark: \SI{9.52}{billion\$} in annual exposure and nearly \SI{30}{\percent} of assets threatened by stranding under plausible carbon pricing scenarios. However, the concentration of these risks also presents an opportunity. Targeted interventions at high-intensity sites and rapid grid decarbonization in mining-intensive countries can mitigate a significant portion of the risk.
+
+For investors, the message is clear: the energy transition will be copper-intensive, but not all copper is created equal. Asset-level transparency---enabled by satellite monitoring and rigorous analysis---is the only reliable means of distinguishing between the mines of the future and the stranded assets of the past. As carbon pricing becomes a global norm, the ability to identify and manage transition risk at the asset level will be a critical determinant of portfolio performance and climate impact.
+
+\bibliographystyle{abbrvnat}
+\begin{thebibliography}{99}
+
+\bibitem{Caldecott2016}
+Caldecott, B., Howarth, N., and McSharry, P. (2016).
+\textit{Stranded Assets and the Fossil Fuel Divestment Campaign}.
+Smith School of Enterprise and the Environment, University of Oxford.
+
+\bibitem{ClimateTRACE2025}
+Climate TRACE Coalition (2025).
+\textit{Copper Mining Emissions Database v5.2.0}.
+Available at: \url{https://climatetrace.org}.
+
+\bibitem{IEA2023}
+International Energy Agency (2023).
+\textit{The Role of Critical Minerals in Clean Energy Transitions}.
+IEA Publications.
+
+\bibitem{IPCC2023}
+IPCC (2023).
+\textit{Sixth Assessment Report (AR6)---Mitigation of Climate Change}.
+Intergovernmental Panel on Climate Change.
+
+\bibitem{NGFS2023}
+Network for Greening the Financial System (2023).
+\textit{NGFS Climate Scenarios for Central Banks and Supervisors}.
+NGFS Publications.
+
+\bibitem{WorldBank2023}
+World Bank (2023).
+\textit{Mineral Intensity of the Energy Transition}.
+World Bank Group.
+
+\end{thebibliography}
+
+\end{document}
