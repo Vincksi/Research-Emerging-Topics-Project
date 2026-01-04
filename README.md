@@ -204,8 +204,8 @@ The following processed datasets are available in `app/public/data/` for use in 
 
 ### Carbon Risk Metrics
 We define risk using two primary axes:
-1.  **Total Exposure**: $Annual Emissions \times Carbon Price$.
-2.  **Carbon Intensity**: $tCO₂ / tCu$ (tonnes of CO₂ per tonne of copper produced).
+1.  **Total Exposure**: $\text{Annual Emissions} \times \text{Carbon Price}$
+2.  **Carbon Intensity**: $\frac{\text{tCO}_2}{\text{tCu}}$ (tonnes of CO₂ per tonne of copper produced)
 
 ### Financial Assumptions
 -   **Copper Benchmark Price**: $9,500/tonne.

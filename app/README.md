@@ -49,7 +49,7 @@ npm run preview
 app/
 ├── src/
 │   ├── components/
-│   │   ├── dashboard/          # Dashboard-specific components
+│   │   ├── dashboard/                                  # Dashboard-specific components
 │   │   │   ├── AssetDataTable.tsx
 │   │   │   ├── AssetMap.tsx
 │   │   │   ├── CompanyPortfolioTable.tsx
@@ -58,18 +58,18 @@ app/
 │   │   │   ├── ScenarioComparisonChart.tsx
 │   │   │   ├── TopAssetsBarChart.tsx
 │   │   │   └── [10+ more components]
-│   │   ├── ui/                 # Reusable UI components (shadcn)
-│   │   └── Dashboard.tsx       # Main dashboard component
+│   │   ├── ui/                                         # Reusable UI components (shadcn)
+│   │   └── Dashboard.tsx                               # Main dashboard component
 │   ├── pages/
-│   │   ├── Index.tsx          # Home page
-│   │   └── NotFound.tsx       # 404 page
-│   ├── hooks/                  # Custom React hooks
-│   ├── lib/                    # Utility functions
-│   ├── types/                  # TypeScript type definitions
-│   └── App.tsx                 # Root component
+│   │   ├── Index.tsx                                   # Home page
+│   │   └── NotFound.tsx                                # 404 page
+│   ├── hooks/                                          # Custom React hooks
+│   ├── lib/                                            # Utility functions
+│   ├── types/                                          # TypeScript type definitions
+│   └── App.tsx                                         # Root component
 │
 ├── public/
-│   └── data/                   # CSV data files
+│   └── data/                                           # CSV data files
 │       ├── copper_mining_with_risk_categories.csv
 │       ├── critical_risk_assets.csv
 │       ├── company_carbon_exposure.csv
