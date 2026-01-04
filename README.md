@@ -1,344 +1,260 @@
 # ESG Stranded Assets Analysis: Carbon Transition Risk in Copper Mining
 
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-18.3-61dafb.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6.svg)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-Academic-green.svg)]()
+
 ## Overview
 
-This research project provides a comprehensive financial risk assessment of the global copper mining industry under carbon pricing scenarios, analyzing 914 mining assets across 56+ countries to identify stranded asset risk in the transition to a low-carbon economy.
+This research project provides a comprehensive **financial risk assessment** of the global copper mining industry under various carbon pricing scenarios. By analyzing **914 mining assets** across 56+ countries, we identify stranded asset risks associated with the transition to a low-carbon economy.
 
 ### Key Research Questions
 
-1. Which copper mining assets become unprofitable under carbon pricing? ($50-$200/tCO₂ scenarios)
-2. What is the total financial exposure of the industry to carbon costs?
-3. How are emissions trending over time (2021-2024)?
-4. Can we predict stranded asset risk using machine learning?
+1.  **Financial Vulnerability**: Which copper mining assets become unprofitable under carbon pricing scenarios ($50–$200/tCO₂)?
+2.  **Industry Exposure**: What is the total financial exposure of the global copper industry to carbon costs?
+3.  **Emission Trajectories**: How are emissions trending over time (2021–2024), and which assets are improving?
+4.  **Risk Modeling**: Can we effectively categorize and predict stranded asset risk using quantitative metrics?
 
 ### Key Findings
 
-- $9.52 billion annual carbon cost exposure at $100/tCO₂ (production mines)
-- 28.3% of assets (259 mines) at critical or high stranding risk
-- $14.28 billion swing between $50 and $200 carbon pricing scenarios
-- +0.99% CAGR in emissions (2021-2024)
-- Top 10% of assets account for 51.6% of total exposure
-- Median break-even price: $776/tCO₂
+-   **$9.52 billion** annual carbon cost exposure at $100/tCO₂ (for production mines).
+-   **28.3%** of assets (259 mines) identified at critical or high stranding risk.
+-   **$14.28 billion swing** in total industry cost between $50 and $200 carbon pricing scenarios.
+-   **Top 10%** of assets account for **51.6%** of total industry exposure (significant concentration risk).
+-   **Median break-even price**: $776/tCO₂ (indicating resilience for the majority of current operations).
 
 ---
 
 ## Table of Contents
 
-- [Dataset](#dataset)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Analysis](#analysis)
-- [Web Application](#web-application)
-- [Methodology](#methodology)
-- [Technical Stack](#technical-stack)
-- [Future Work](#future-work)
-- [License](#license)
+-   [Dataset](#dataset)
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [Project Structure](#project-structure)
+-   [Analysis Notebooks](#analysis-notebooks)
+-   [Web Application](#web-application)
+-   [Key Outputs](#key-outputs)
+-   [Methodology](#methodology)
+-   [Technical Stack](#technical-stack)
+-   [Future Work](#future-work)
+-   [Citations](#citations)
+-   [License](#license)
+
+---
 
 ## Dataset
 
 ### Source: Climate TRACE v5.2.0
 
-**Climate TRACE** (Tracking Real-time Atmospheric Carbon Emissions) provides the world's most detailed inventory of greenhouse gas emissions, combining satellite imagery, AI, and ground-level sensors.
+**Climate TRACE** (Tracking Real-time Atmospheric Carbon Emissions) provides detailed inventories of greenhouse gas emissions by combining satellite imagery, AI, and ground-level sensors.
 
-- **Dataset**: Mineral Extraction - Copper Mining Emissions
-- **Version**: 5.2.0 (released 2025)
-- **Temporal Coverage**: Monthly data from January 2021 to August 2025
-- **Spatial Coverage**: Global (914 assets across 56+ countries)
-- **Observations**: 51,184 monthly emission records
+-   **Sector**: Mineral Extraction - Copper Mining
+-   **Version**: 5.2.0 (Released 2025)
+-   **Temporal Coverage**: 2021 – 2024 (Monthly records)
+-   **Total Assets**: 914 global assets
+-   **Total Observations**: 51,184 monthly emission records
 
 **Data Attribution**:
-```
+```text
 Climate TRACE Coalition (2025). Copper Mining Emissions Database v5.2.0.
 Available at: https://climatetrace.org
+```
+
+### Data Processing
+
+The raw dataset has been cleaned and enhanced with:
+-   **Ownership Mapping**: Parent company identification for asset-level aggregation.
+-   **Carbon Cost Modeling**: Calculations for $50, $100, $150, and $200/tCO₂ scenarios.
+-   **Risk Categorization**: Classification into Critical, High, Moderate, and Low risk based on cost and intensity.
+-   **Financial Metrics**: Estimated revenue impact and break-even carbon pricing.
+
+**Technical Reference**: `Mineral Extraction sector-Mining and Quarrying Emissions from Copper, Iron, Bauxite, Rock and Sand.pdf`
+
+---
 
 ## Installation
 
 ### Prerequisites
 
-- Python: 3.9 or higher
-- Node.js: 18.x or higher (for web application)
-- Git: For cloning the repository
+-   **Python**: 3.9+
+-   **Node.js**: 18.x / **Bun**: 1.1+ (recommended for the web app)
+-   **Git**: For version control
 
-### 1. Clone Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/yourusername/Research-Emerging-Topics-Project.git
 cd Research-Emerging-Topics-Project
 ```
 
-### 2. Python Environment Setup
-
-#### Option A: Using conda (recommended)
+### 2. Python Environment Setup (Analysis)
 
 ```bash
-conda create -n esg-analysis python=3.9
-conda activate esg-analysis
-pip install -r requirements.txt
-```
-
-#### Option B: Using venv
-
-```bash
+# Using venv
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Verify Installation
+### 3. Web Application Setup
 
 ```bash
-python -c "import pandas, numpy, plotly, sklearn; print('All packages installed!')"
+cd app
+npm install  # or 'bun install'
 ```
+
+---
 
 ## Usage
 
 ### Running Jupyter Notebooks
 
-1. Start Jupyter Lab:
-```bash
-jupyter lab
-```
-
-2. Navigate to notebooks/ folder
-
-3. Run notebooks in this order:
-   - Data_Exploration_and_Cleaning.ipynb - Initial data processing
-   - Stranded_Assets_Analysis.ipynb - Main analysis
-   - Financial_Analysis.ipynb - Break-even pricing and profitability impact
-   - Q1_Enhanced_Analysis.ipynb - Machine learning models and interactive tools
-   - Climate_Stress_Testing_and_Portfolio Simulation.ipynb - Advanced scenario modeling
+1.  Navigate to the root directory and start Jupyter:
+    ```bash
+    jupyter lab
+    ```
+2.  Open and run the notebooks in the `notebooks/` directory in the following order:
+    1.  `Data_Exploration_and_Cleaning.ipynb`: Preprocessing and feature engineering.
+    2.  `Stranded_Assets_Analysis.ipynb`: Main risk assessment and asset categorization.
+    3.  `Financial_Analysis.ipynb`: Profitability impact and break-even pricing.
+    4.  `Climate_Stress_Testing_and_Portfolio Simulation.ipynb`: Scenario modeling and Monte Carlo simulations.
 
 ### Running the Web Application
 
-1. Navigate to app directory:
-```bash
-cd app
-```
+1.  Navigate to the `app/` directory:
+    ```bash
+    cd app
+    npm run dev  # or 'bun dev'
+    ```
+2.  Open your browser to `http://localhost:5173` to explore the interactive dashboard.
 
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start development server:
-```bash
-npm run dev
-```
-
-4. Open browser: Navigate to http://localhost:5173
-
-5. Build for production:
-```bash
-npm run build
-```
+---
 
 ## Project Structure
 
-```
+```text
 Research-Emerging-Topics-Project/
-│
-├── README.md                                   # Project documentation
-├── requirements.txt                            # Python dependencies
-├── .gitignore                                  # Git ignore rules
-│
-├── datasets/     
-│   ├── input_data/                             # Raw data files
-│   └── output_data/                            # Processed data
-│       ├── cleaning/                           # Outputs from data cleaning
-│       ├── financial/                          # Financial analysis outputs
-│       ├── portfolio_simulation/               # Portfolio analysis
-│       └── stranded_assets/                    # Stranded assets analysis
-│
-├── notebooks/                                  # Jupyter notebooks for analysis      
+├── app/                                        # React/TypeScript Dashboard
+│   ├── public/data/                            # CSV data consumed by the app
+│   ├── src/
+│   │   ├── components/                         # UI and Dashboard components
+│   │   └── pages/                              # Application routes
+│   └── vite.config.ts
+├── datasets/                                   # Data storage
+│   ├── input_data/                             # Raw Climate TRACE v5.2.0 CSVs
+│   └── output_data/                            # Processed analysis outputs
+├── notebooks/                                  # Research and Analysis Notebooks
 │   ├── Data_Exploration_and_Cleaning.ipynb
 │   ├── Stranded_Assets_Analysis.ipynb
 │   ├── Financial_Analysis.ipynb
-│   └── Climate_Stress_Testing_and_Portfolio_Simulation.ipynb
-│
-└── app/                                        # Web application
-    ├── src/
-    │   ├── components/                         # React components
-    │   │   └── dashboard/                      # Dashboard components
-    │   ├── pages/                              # Application pages
-    │   ├── hooks/                              # Custom React hooks
-    │   ├── lib/                                # Utility functions
-    │   └── types/                              # TypeScript type definitions
-    ├── public/
-    │   └── data/                               # Data files for the web app
-    ├── package.json                            # Node.js dependencies
-    └── vite.config.ts                          # Vite configuration
+│   └── Climate_Stress_Testing_and_Portfolio Simulation.ipynb
+│ 
+├── requirements.txt                            # Python dependencies
+├── .gitignore                                  # Git exclusions
+└── README.md                                   # Project documentation
 ```
 
-## Detailed Project Description
+---
 
-This project provides a comprehensive analysis of carbon transition risks in the global copper mining industry. It combines data analysis, financial modeling, and web visualization to assess the impact of carbon pricing on mining assets worldwide.
+## Analysis Notebooks
 
-### Key Components
+### 1. Data Exploration & Cleaning
+Initial processing of the Climate TRACE dataset. Handles missing values, performs parent company mapping, and aggregates monthly data into annual snapshots for 2021–2024.
 
-1. **Data Processing Pipeline**
-   - Ingests raw emissions data from Climate TRACE
-   - Cleans and processes data for analysis
-   - Generates derived metrics and risk indicators
-   - `Data_Exploration_and_Cleaning.ipynb`: Initial data processing and quality checks
+### 2. Stranded Assets Analysis
+**The core research module.** Identifies "At-Risk" assets by cross-referencing carbon cost (total exposure) with carbon intensity (efficiency). Categorizes all 914 assets into four risk tiers.
 
-2. **Analytical Notebooks**
-   - `Stranded_Assets_Analysis.ipynb`: Identifies assets at risk of becoming stranded
-   - `Financial_Analysis.ipynb`: Evaluates financial impacts of carbon pricing
-   - `Climate_Stress_Testing_and_Portfolio_Simulation.ipynb`: Simulates different climate scenarios
+### 3. Financial Analysis
+Applies financial metrics to the emissions data. Calculates the **Carbon Break-Even Price** (CBEP) for each asset and analyzes the "stranding cascade"—the point at which a critical mass of the industry becomes unprofitable.
 
-3. **Web Application**
-   - Interactive dashboard for data exploration
-   - Visualization of key metrics and trends
-   - Scenario analysis tools
+### 4. Climate Stress Testing
+Uses Monte Carlo simulations to model uncertainty in carbon pricing and production volatility. Evaluates portfolio-level risk for major mining companies.
 
-### Data Flow
-
-1. **Input Data**
-   - Raw emissions data from Climate TRACE
-   - Asset-level production and financial data
-   - Carbon pricing scenarios
-
-2. **Processing**
-   - Data cleaning and validation
-   - Feature engineering
-   - Risk scoring and classification
-
-3. **Outputs**
-   - Processed datasets
-   - Analytical reports
-   - Interactive visualizations
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.9+
-- Node.js 18.x+
-- Jupyter Lab
-- Git
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/Research-Emerging-Topics-Project.git
-   cd Research-Emerging-Topics-Project
-   ```
-
-2. Set up Python environment:
-   ```bash
-   # Using conda (recommended)
-   conda create -n esg-analysis python=3.9
-   conda activate esg-analysis
-   pip install -r requirements.txt
-   
-   # Or using venv
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Install Node.js dependencies:
-   ```bash
-   cd app
-   npm install
-   ```
-
-## Usage
-
-### Running Analysis
-
-1. Start Jupyter Lab:
-   ```bash
-   jupyter lab
-   ```
-
-2. Open and run notebooks in the `notebooks/` directory in order:
-   - Start with `Data_Exploration_and_Cleaning.ipynb`
-   - Proceed with the remaining notebooks in sequence
-
-### Running the Web Application
-
-1. From the project root:
-   ```bash
-   cd app
-   npm run dev
-   ```
-
-2. Open your browser to `http://localhost:5173`
-
-## Data Management
-
-### Input Data
-- Location: `datasets/input_data/`
-- Format: CSV, JSON
-- Update Frequency: As needed
-
-### Output Data
-- Location: `datasets/output_data/`
-- Organized by analysis type (cleaning, financial, etc.)
-- Includes processed datasets and analysis results
-
-## Analysis
-
-Key analysis components include:
-- Stranded assets assessment
-- Financial risk modeling
-- Carbon pricing scenarios
-- Machine learning predictions
-- Portfolio stress testing
+---
 
 ## Web Application
 
-### Technology Stack
+The interactive dashboard provides a visual interface for the research findings, allowing users to drill down into specific assets, countries, or companies.
 
-- Frontend: React 18 with TypeScript
-- Backend: Python 3.9+
-- Database: CSV loading via PapaParse
+-   **Interactive KPI Cards**: Real-time updates based on selected carbon price scenarios.
+-   **Risk Distribution**: Visualizing the industry split across risk categories.
+-   **Global Asset Map**: Geographic visualization of carbon hotspots.
+-   **Company Portfolio Explorer**: Aggregated risk views for the world's largest copper producers.
 
-### Features
+**Tech Stack**: React 18, TypeScript, Tailwind CSS, Shadcn/UI, Plotly.js, and Vite.
 
-- Interactive Dashboard: KPI cards, risk distribution charts
-- Asset Explorer: Searchable data tables with filtering
-- Geographic Mapping: Asset locations with risk overlays
-- Scenario Comparison: Toggle between carbon pricing scenarios
-- Company Portfolios: Aggregated exposure by parent company
-- Risk Panels: Drill-down by Critical/High/Moderate/Low risk categories
+---
 
 ## Key Outputs
 
-### Analysis Datasets (in data/ and notebooks/)
+The following processed datasets are available in `app/public/data/` for use in the dashboard or further analysis:
 
-| File | Description | Records |
-|------|-------------|---------|
-| copper_mining_with_risk_categories.csv | All assets with risk classifications | 914 |
-| critical_risk_assets.csv | Top 21 critical risk mines | 21 |
-| company_carbon_exposure.csv | Top 25 companies by exposure | 25 |
-| divestment_candidates.csv | High-risk, low-performance assets | Variable |
-| low_risk_opportunities.csv | Low-carbon, high-capacity assets | 28 |
-| financial_analysis_complete.csv | Break-even pricing & profitability | 601 |
-| ml_risk_predictions.csv | Machine learning risk scores | 608 |
-| temporal_trends_2021_2024.csv | Emission trajectories | 914 |
-| mine_type_vulnerability.csv | Risk by mine type | Variable |
-| stranding_cascade_data.csv | Stranding thresholds ($0-$250) | 51 |
+| File | Description |
+| :--- | :--- |
+| `copper_mining_with_risk_categories.csv` | Full dataset with risk classifications (914 assets). |
+| `critical_risk_assets.csv` | Deep dive into the most vulnerable 21 assets. |
+| `company_carbon_exposure.csv` | Aggregated exposure for the top 25 mining companies. |
+| `divestment_candidates.csv` | List of assets showing high-risk and deteriorating trends. |
+| `low_risk_opportunities.csv` | Comparison set of low-carbon, high-resilience assets. |
 
-## License
+---
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+## Methodology
 
-## Acknowledgments
+### Carbon Risk Metrics
+We define risk using two primary axes:
+1.  **Total Exposure**: $Annual Emissions \times Carbon Price$.
+2.  **Carbon Intensity**: $tCO₂ / tCu$ (tonnes of CO₂ per tonne of copper produced).
 
-- Climate TRACE Coalition for providing open-access emissions data
-- Shadcn for the beautiful UI component library
-- Plotly Team for interactive visualization tools
-- Academic advisors and peer reviewers
+### Financial Assumptions
+-   **Copper Benchmark Price**: $9,500/tonne.
+-   **Average Operating Margin**: 30%.
+-   **Stranding Threshold**: An asset is considered "at risk" if carbon costs exceed 30% of estimated revenue (wiping out operating margin).
+
+---
+
+## Technical Stack
+
+### Data Science (Python)
+-   **Processing**: `pandas`, `numpy`
+-   **Visualization**: `plotly`, `matplotlib`, `seaborn`
+-   **Analysis**: `scipy`, `scikit-learn`
+
+### Web Frontend
+-   **Framework**: React (Vite)
+-   **Styling**: Tailwind CSS, Lucide React
+-   **Components**: Radix UI (via Shadcn)
+-   **Visualization**: Plotly.js, Recharts
+
+---
 
 ## Future Work
 
-- Expand data coverage with recent emissions
-- Enhance prediction models
-- Improve web application features
-- Add more interactive visualizations
+-   **Scope 3 Integration**: Expanding the analysis to include smelting and transport emissions.
+-   **Predictive Modeling**: Using LSTM/Time-Series models to forecast future emission trajectories based on historical satellite data.
+-   **Real-time API**: Integrating directly with the Climate TRACE API for live asset monitoring.
 
-Last Updated: January 3, 2026
+---
+
+## Citations
+
+### Data Source
+-   Climate TRACE Coalition (2025). *Copper Mining Emissions Database v5.2.0*. [https://climatetrace.org](https://climatetrace.org)
+
+### Academic References
+-   Caldecott, B., et al. (2016). *Stranded Assets and the Fossil Fuel Divestment Campaign*.
+-   IPCC (2023). *Sixth Assessment Report (AR6) - Mitigation of Climate Change*.
+
+---
+
+## Contributors
+
+**Alexis Vannson, Kerrian Le Bars & Othmane Menkor**  
+CentraleSupélec | ESSEC Business School | Research & Emerging Topics (2026)
+
+---
+
+## License
+
+This project is released under the **MIT License**. See the `LICENSE` file for details. Academic use of the data is governed by Climate TRACE's terms of service.
